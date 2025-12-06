@@ -1,0 +1,26 @@
+# Social Agent Configuration
+# Copy this file to config.yaml and fill in your values
+
+# Letta Configuration
+letta:
+  api_key: "your-letta-api-key-here"
+  timeout: 600  # 10 minutes timeout for API calls
+  agent_id: "agent-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"  # Your agent ID from Letta Cloud
+
+  # For cloud API (default - leave base_url unset)
+  # base_url: "https://app.letta.com"  # Optional, defaults to cloud API if not specified
+
+  # For self-hosted Letta server
+  # base_url: "http://localhost:8283"  # Self-hosted Letta server URL
+
+# Bluesky Configuration
+bluesky:
+  username: "yourname.bsky.social"
+  password: "your-app-password-here"
+  pds_uri: "https://bsky.social"  # Optional, defaults to bsky.social
+  autofollow: false  # Automatically follow users who follow the bot
+
+# Bot Behavior Configuration
+bot:
+  # Maximum number of posts in a thread before skipping (0 = no limit)
+  max_thread_posts: 0

@@ -1,0 +1,15 @@
+.env
+old.py
+session_*.txt
+__pycache__/
+queue/
+queue_*/
+agent_archive/
+x_cache/
+x_queue/
+# But track important X state files
+!x_queue/last_seen_id.json
+!x_queue/processed_mentions.json
+# Ignore all config files
+configs/
+config.yaml
