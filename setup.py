@@ -59,6 +59,7 @@ def create_config(agent_id: str, letta_api_key: str = None):
     console.print("\n[yellow]Bluesky Configuration:[/yellow]")
     bsky_username = Prompt.ask("Enter your Bluesky username (e.g., yourname.bsky.social)")
     bsky_password = Prompt.ask("Enter your Bluesky app password", password=True)
+    bsky_pds_uri = Prompt.ask("Enter your PDS URI", default="https://bsky.social")
 
     # Create config structure
     config = {
