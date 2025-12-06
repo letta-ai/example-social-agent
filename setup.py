@@ -152,7 +152,7 @@ def main():
     console.print("\n[cyan]Next steps:[/cyan]")
     console.print("  1. Verify your settings in config.yaml")
     console.print("  2. Register tools: [bold]python register_tools.py[/bold]")
-    console.print("  3. Run your agent: [bold]export MODEL=\"google_ai/gemini-3-pro-preview\" && python bsky.py[/bold]")
+    console.print("  3. Run your agent: [bold]python bsky.py[/bold]")
     console.print("\nSee README.md for more information.")
 
 
