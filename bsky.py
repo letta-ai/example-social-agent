@@ -379,7 +379,8 @@ If you choose to reply, use the add_post_to_bluesky_reply_thread tool. Each call
         thread_handles_count = len(unique_handles)
         prompt_char_count = len(prompt)
         logger.debug(f"Sending to LLM: @{author_handle} mention | msg: \"{mention_text[:50]}...\" | context: {len(thread_context)} chars, {thread_handles_count} users | prompt: {prompt_char_count} chars")
-        
+
+        chunk_count = 0
         try:
             # Attach user blocks before sending to agent
             if unique_dids:
@@ -390,6 +391,15 @@ If you choose to reply, use the add_post_to_bluesky_reply_thread tool. Each call
                 elif not success:
                     logger.warning("Failed to attach some user blocks, continuing anyway")
             # Use streaming to avoid 524 timeout errors (SDK v1.0: create() with streaming=True)
+            request_params = {
+                'agent_id': void_agent.id,
+                'messages': [{"role": "user", "content": prompt[:100] + "..."}],  # Truncated for logging
+                'streaming': True,
+                'stream_tokens': False,
+                'max_steps': 100
+            }
+            logger.debug(f"Sending streaming request: {request_params}")
+
             message_stream = CLIENT.agents.messages.create(
                 agent_id=void_agent.id,
                 messages=[{"role": "user", "content": prompt}],
@@ -397,10 +407,12 @@ If you choose to reply, use the add_post_to_bluesky_reply_thread tool. Each call
                 stream_tokens=False,  # Step streaming only (faster than token streaming)
                 max_steps=100
             )
-            
+
             # Collect the streaming response
             all_messages = []
             for chunk in message_stream:
+                chunk_count += 1
+                logger.debug(f"Received chunk {chunk_count}: type={getattr(chunk, 'message_type', 'unknown')}")
                 # Log condensed chunk info
                 if hasattr(chunk, 'message_type'):
                     if chunk.message_type == 'reasoning_message':
@@ -607,6 +619,7 @@ If you choose to reply, use the add_post_to_bluesky_reply_thread tool. Each call
             error_str = str(api_error)
             logger.error(f"Letta API error: {api_error}")
             logger.error(f"Error type: {type(api_error).__name__}")
+            logger.error(f"Chunks received before error: {chunk_count}")
             logger.error(f"Full traceback:\n{traceback.format_exc()}")
             logger.error(f"Mention text was: {mention_text}")
             logger.error(f"Author: @{author_handle}")
